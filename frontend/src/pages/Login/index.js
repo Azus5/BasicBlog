@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-export default function Login(props) {
+import './styles.css'
+
+export default function Login() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState('');
+  const history = useHistory();
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -19,70 +21,77 @@ export default function Login(props) {
     axios.post('http://localhost:3000/login', {user}, {withCredentials: true})
       .then(response => {
         if (response.data.logged_in) {
-          props.handleLogin(response.data);
+          handleLogin(response.data);
           redirect()
         } else {
-          setErrors({
-            errors: response.data.errors
-          })
+            alert(response.data.errors);
         }
       })
       .catch(err => console.log('Login error: ' + err.message))
   }
 
-  function redirect() {
-    props.history.push('/')
+  function handleLogin(data) {
+    localStorage.setItem('userLogged', 'logged');
+    localStorage.setItem('userData', JSON.stringify(data.user));
   }
 
-  function handleErros() {
-    return (
-      <div>
-        <ul>
-          {errors.map(error => {
-            return <li key={error}>{error}</li>
-          })}
-        </ul>
-      </div>
-    );
+  function redirect() {
+    history.push('/')
   }
 
   return (
-    <div>
-      <h1>Log in</h1>
+    <div className="container">
+      <header>
+        <Link className="header-option" to="/">
+          Home
+        </Link>
 
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          name="username" 
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}/>
+        <Link className="header-option" to="/login">
+          Login
+        </Link>
 
-        <input 
-          type="text" 
-          name="email" 
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}/>          
+        <Link className="header-option" to="/Signup">
+          Signup
+        </Link>
+      </header>
 
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}/>
+      <form onSubmit={handleSubmit} className="login-form">
+        <h1>Enter with your account</h1>
 
-        <button placeholder="submit" type="submit">Log In</button>
+        <div className="input">
+          <input 
+            type="text" 
+            name="username" 
+            value={username}
+            required
+            onChange={e => setUsername(e.target.value)}/>
+            <label>Username</label>
+        </div>
 
-        <div>
-          or <Link to='/signup'>Sign up</Link>
+        <div className="input">
+          <input 
+            type="text" 
+            name="email" 
+            required
+            value={email}
+            onChange={e => setEmail(e.target.value)}/> 
+            <label>Email</label>    
+        </div>     
+
+        <div className="input">
+          <input 
+            type="password" 
+            name="password" 
+            required
+            value={password}
+            onChange={e => setPassword(e.target.value)}/>
+            <label>Password</label>
+        </div>
+        <div className="options">
+          <Link to='/signup'>don't have an account?</Link>
+          <button placeholder="submit" type="submit">Log In</button>
         </div>
       </form>
-      <div>
-        {
-          errors ? handleErros() : null
-        }
-      </div>
     </div>
   );
 }

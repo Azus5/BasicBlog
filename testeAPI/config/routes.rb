@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   #Post related
   
-  resources :posts, only: [:index, :create, :destroy, :show, :update]
+  resources :posts
   resources :users, only: [:create, :show, :index]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

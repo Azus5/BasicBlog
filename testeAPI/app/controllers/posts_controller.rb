@@ -4,7 +4,7 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.all
+    @posts = current_user.posts
 
     render json: @posts
   end
@@ -19,15 +19,15 @@ class PostsController < ApplicationController
     # "post_params.merge(user: current_user)" puts user id in Post 
     @post = Post.new(post_params.merge(user: current_user))
 
-    respond_to do |format|
-      if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
-      else
-        format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+    if @post.save
+      render json: {
+        status: :created,
+        posts: @post
+      }
+    else
+      render json: @post.errors 
     end
+
   end
 
   # PATCH/PUT /posts/1
