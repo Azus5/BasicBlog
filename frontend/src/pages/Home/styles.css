@@ -1,0 +1,14 @@
+div .container {
+    display: grid;
+
+    grid-template-columns: auto;
+    grid-template-rows: 7vh 100vh;
+} 
+
+header {
+    /* background-color: black; */
+}
+
+main {
+    /* background-color: blue; */
+}
