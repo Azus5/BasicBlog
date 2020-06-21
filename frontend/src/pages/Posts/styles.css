@@ -50,3 +50,14 @@
     margin-top: 50px;
     text-align: justify;
 }
+
+.excluir-post {
+    margin-right: 10px;
+    transition: all .4s;
+    transform-origin: 50% 50%;
+}
+
+.excluir-post:hover {
+    transform: scale(1.2);
+}
+

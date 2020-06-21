@@ -1,12 +1,12 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :update, :destroy]
-  before_action :require_authorization!, only: [:show, :update, :destroy]
+  # before_action :require_authorization!, only: [:show, :update, :destroy]
 
-  # GET /posts
+  # GET /posts?user_id=
   def index
     # puts current_user.posts
 
-    @posts = current_user[:posts]
+    @posts = Post.where(user_id: params[:user_id])
 
     render json: @posts
   end
@@ -48,10 +48,10 @@ class PostsController < ApplicationController
   # DELETE /posts/1
   def destroy
     @post.destroy
-    respond_to do |format|
-      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    
+    render json: {
+      deleted: true
+    }
   end
 
   private
